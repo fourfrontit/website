@@ -96,7 +96,6 @@ export default function FourFrontITLanding() {
       {/* NAV */}
       <header className="sticky top-0 z-40 backdrop-blur bg-black/40 dark:bg-slate-900/60 border-b border-white/5">
         <nav className="max-w-6xl mx-auto px-6 py-3 flex items-center justify-between">
-          {/* <-- Replaced brand block with accessible link that smooth-scrolls and updates activeSection */}
           <a
             href="#home"
             onClick={(e) => {
@@ -196,17 +195,56 @@ export default function FourFrontITLanding() {
             </motion.div>
           </section>
 
-          {/* ABOUT */}
-          <motion.section id="about" ref={el => sections.current.about = el} className="mt-20" initial="hidden" whileInView="show" viewport={{ once: true }}>
-  <motion.h3 variants={fadeUp} className="text-2xl font-semibold">About Us</motion.h3>
-  <motion.p variants={fadeUp} className="mt-3 text-slate-300 max-w-3xl">FourFrontIT is an MSP focused on reliable cloud hosting, device management and security for growing businesses. Our automation-first approach reduces downtime and predictable costs while keeping human experts in the loop.</motion.p>
+          {/* ABOUT (Updated) */}
+          <motion.section
+            id="about"
+            ref={(el) => (sections.current.about = el)}
+            className="mt-20"
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true }}
+          >
+            <motion.h3 variants={fadeUp} className="text-2xl font-semibold">About Us</motion.h3>
 
-  <motion.div variants={fadeUp} className="mt-6">
-    <div className="p-4 rounded-lg bg-gradient-to-br from-slate-900/60 to-slate-800/40 border border-white/6">
-      <div className="text-slate-300">For more about our leadership and company vision, visit our <a href="/about" className="text-cyan-400 underline">About page</a>.</div>
-    </div>
-  </motion.div>
-</motion.section>
+            <motion.p variants={fadeUp} className="mt-3 text-slate-300 max-w-3xl">
+              FourFrontIT is an MSP focused on reliable cloud hosting, device management and security for growing businesses. Our automation-first approach reduces downtime and predictable costs while keeping human experts in the loop.
+            </motion.p>
+
+            {/* Leadership Intro */}
+            <motion.div
+              variants={fadeUp}
+              className="mt-10 p-6 rounded-xl bg-gradient-to-br from-slate-900/60 to-slate-800/40 border border-white/10 shadow-lg"
+            >
+              <h4 className="text-xl font-semibold text-white mb-2">Our Leadership</h4>
+              <p className="text-slate-300 leading-relaxed">
+                At the core of FourFront IT is a leadership team driven by innovation, accountability, and an unwavering commitment to client success. With decades of combined experience across IT infrastructure, cybersecurity, cloud computing, and digital transformation, our leadership guides the company with a clear vision: to empower businesses through reliable, scalable, and secure technology solutions.
+              </p>
+            </motion.div>
+
+            {/* Expanded content: Gary + Solutions */}
+            <motion.div variants={fadeUp} className="mt-8 grid md:grid-cols-2 gap-6">
+              <motion.div whileHover={{ scale: 1.02, y: -6 }} className="p-6 rounded-xl bg-gradient-to-br from-slate-900/60 to-slate-800/40 border border-white/10 shadow-lg">
+                <h5 className="font-semibold text-white mb-1">Gary Flavin — Co-founder &amp; Director of Marketing</h5>
+                <p className="text-slate-300 text-sm leading-relaxed mt-2">
+                  Gary is a tech enthusiast and mechanical engineering professional with a deep passion for technology, innovation, and the MSP industry. With a sharp eye for emerging trends and a hands-on approach to problem-solving, Gary brings both technical expertise and strategic marketing insight to the team.
+                </p>
+                <p className="text-slate-300 text-sm leading-relaxed mt-3">
+                  As Co-founder of FourFront IT, he is dedicated to helping businesses thrive through smart IT solutions, clear communication, and a commitment to excellence.
+                </p>
+              </motion.div>
+
+              <motion.div whileHover={{ scale: 1.02, y: -6 }} className="p-6 rounded-xl bg-gradient-to-br from-slate-900/60 to-slate-800/40 border border-white/10 shadow-lg">
+                <h5 className="font-semibold text-white mb-1">Solutions for Modern Business IT</h5>
+                <p className="text-slate-300 text-sm leading-relaxed mt-2">
+                  Empowering your operations with managed IT, cloud services, and 24/7 support. Discover secure, scalable solutions tailored for business growth.
+                </p>
+                <div className="mt-4 flex gap-3">
+                  <a href="#services" className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-white/10 text-sm text-white hover:scale-105 transition-transform">Explore Services</a>
+                  <a href="#contact" className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-gradient-to-r from-cyan-400 to-violet-500 text-black font-semibold shadow hover:scale-105 transition-transform">Get a Quote</a>
+                </div>
+              </motion.div>
+            </motion.div>
+          </motion.section>
 
           {/* SERVICES */}
           <section id="services" ref={el => sections.current.services = el} className="mt-12 grid md:grid-cols-3 gap-6">
@@ -383,14 +421,13 @@ export default function FourFrontITLanding() {
             </div>
           </motion.section>
 
-          {/* CONTACT OPTIONS (kept as-is because it's already styled) */}
+          {/* CONTACT OPTIONS */}
           <section className="max-w-6xl mx-auto px-6 py-12" aria-label="Contact options">
             <div className="text-center mb-6">
               <h3 className="text-2xl font-semibold">Contact Options</h3>
             </div>
 
             <motion.div initial="hidden" whileInView="show" viewport={{ once: true }} variants={{ show: { transition: { staggerChildren: 0.12 } }, hidden: {} }} className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-
               <motion.div variants={fadeUp} whileHover={{ scale: 1.02, y: -6 }} className="p-6 bg-slate-900/50 rounded-lg border border-white/5 shadow-inner text-center relative overflow-hidden">
                 <div className="absolute -left-10 -top-10 opacity-10 pointer-events-none">
                   <svg width="160" height="160" viewBox="0 0 100 100" className="transform rotate-12">
@@ -589,6 +626,6 @@ export function AboutPage() {
           </motion.section>
         </motion.div>
       </main>
-      </div>
-    );
-  }
+    </div>
+  );
+}
