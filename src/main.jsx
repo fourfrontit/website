@@ -1,18 +1,7 @@
-// src/App.jsx
-import React from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Layout from "./Layout";
-import Home from "./four_front_itlanding_preview"; // or your landing component
-import AboutPage from "./AboutPage";
+import React from 'react'
+import { createRoot } from 'react-dom/client'
+import './index.css'         // Tailwind + base css
+import FourFrontITLanding, { AboutPage } from './four_front_itlanding_preview.jsx'
 
-export default function App() {
-  return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Layout><Home/></Layout>} />
-        <Route path="/about" element={<Layout><AboutPage/></Layout>} />
-        {/* other routes */}
-      </Routes>
-    </BrowserRouter>
-  );
-}
+const root = createRoot(document.getElementById('root'))
+root.render(<FourFrontITLanding />)
