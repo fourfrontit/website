@@ -18,7 +18,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Use Node.js
+      - name: Use Node.js 18
         uses: actions/setup-node@v4
         with:
           node-version: '18'
@@ -29,8 +29,9 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: Upload artifact (dist)
-        uses: actions/upload-pages-artifact@v1
+      # Upload the build artifact for Pages - use v2 which depends on the non-deprecated upload-artifact
+      - name: Upload artifact (pages)
+        uses: actions/upload-pages-artifact@v2
         with:
           path: ./dist
 
