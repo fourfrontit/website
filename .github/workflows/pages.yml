@@ -26,6 +26,8 @@ jobs:
         run: |
           npm -v
           npm install
+          npm install react-router-dom
+          npm ls react-router-dom
           npm run build
 
       - name: Archive site
