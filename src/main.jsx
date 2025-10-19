@@ -1,5 +1,7 @@
 import React from 'react'
 import { createRoot } from 'react-dom/client'
-import App from './App.jsx' // or inline component
+import './index.css'         // Tailwind + base css
+import FourFrontITLanding, { AboutPage } from './four_front_itlanding_preview.jsx'
 
-createRoot(document.getElementById('root')).render(<App />)
+const root = createRoot(document.getElementById('root'))
+root.render(<FourFrontITLanding />)
