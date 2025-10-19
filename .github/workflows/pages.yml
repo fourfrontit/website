@@ -26,3 +26,4 @@ jobs:
       - name: Install dependencies
         run: |
           npm -v
+          ls -al
