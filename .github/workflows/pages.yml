@@ -1,4 +1,4 @@
-name: Build and archive site
+name: Build and deploy to GitHub Pages
 
 on:
   push:
@@ -11,9 +11,8 @@ permissions:
   id-token: write
 
 jobs:
-  build-and-archive:
+  build:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -21,31 +20,25 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: 18
 
       - name: Install dependencies
         run: |
           npm -v
-          ls -al
           npm install
-          ls -al
+          npm run build
 
-      - name: Build site
-        run: npm run build
+      - name: Archive site
+        run: zip -r site-dist.zip dist
 
-      - name: Archive site (zip)
-        run: |
-          echo "creating site-dist.zip..."
-          if [ -d "./dist" ]; then
-            zip -r site-dist.zip dist
-            ls -lh site-dist.zip
-          else
-            echo "Error: dist folder not found"
-            exit 1
-          fi
-
-      - name: Upload build artifact
-        uses: actions/upload-artifact@v4
+      - name: Upload artifact for deployment
+        uses: actions/upload-pages-artifact@v3
         with:
-          name: site-dist
-          path: site-dist.zip
+          path: ./dist
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v4
