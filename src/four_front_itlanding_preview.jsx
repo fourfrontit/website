@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { Link } from "react-router-dom"; // <-- added
 
 // Enhanced single-file React landing page with consistent styling across sections.
 // Tailwind CSS + Framer Motion.
@@ -115,7 +116,11 @@ export default function FourFrontITLanding() {
           </a>
 
           <ul className="hidden md:flex items-center gap-6 text-sm">
-            {['about','services','calculator','prices','contact'].map(id => (
+            {/* About uses router Link; other items remain in-page anchors */}
+            <li>
+              <Link to="/about" className={`relative px-2 py-1 hover:text-white ${activeSection === 'about' ? 'text-white font-semibold' : 'text-slate-300'}`}>About</Link>
+            </li>
+            {['services','calculator','prices','contact'].map(id => (
               <li key={id}>
                 <a href={`#${id}`} className={`relative px-2 py-1 hover:text-white ${activeSection === id ? 'text-white font-semibold' : 'text-slate-300'}`}>{id.charAt(0).toUpperCase()+id.slice(1)}</a>
               </li>
@@ -196,17 +201,7 @@ export default function FourFrontITLanding() {
             </motion.div>
           </section>
 
-          {/* ABOUT */}
-          <motion.section id="about" ref={el => sections.current.about = el} className="mt-20" initial="hidden" whileInView="show" viewport={{ once: true }}>
-  <motion.h3 variants={fadeUp} className="text-2xl font-semibold">About Us</motion.h3>
-  <motion.p variants={fadeUp} className="mt-3 text-slate-300 max-w-3xl">FourFrontIT is an MSP focused on reliable cloud hosting, device management and security for growing businesses. Our automation-first approach reduces downtime and predictable costs while keeping human experts in the loop.</motion.p>
-
-  <motion.div variants={fadeUp} className="mt-6">
-    <div className="p-4 rounded-lg bg-gradient-to-br from-slate-900/60 to-slate-800/40 border border-white/6">
-      <div className="text-slate-300">For more about our leadership and company vision, visit our <a href="/about" className="text-cyan-400 underline">About page</a>.</div>
-    </div>
-  </motion.div>
-</motion.section>
+          {/* NOTE: The in-page ABOUT block was removed here. The About page is now at /about handled by react-router. */}
 
           {/* SERVICES */}
           <section id="services" ref={el => sections.current.services = el} className="mt-12 grid md:grid-cols-3 gap-6">
@@ -556,6 +551,8 @@ export default function FourFrontITLanding() {
   );
 }
 
+/* AboutPage remains exported here so index.jsx can import it.
+   This keeps things to only two files as you requested. */
 export function AboutPage() {
   const fadeUp = { hidden: { opacity: 0, y: 8 }, show: { opacity: 1, y: 0 } };
   return (
@@ -589,6 +586,6 @@ export function AboutPage() {
           </motion.section>
         </motion.div>
       </main>
-      </div>
-    );
-  }
+    </div>
+  );
+}
