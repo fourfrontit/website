@@ -1,4 +1,4 @@
-name: Build and deploy to GitHub Pages (gh-pages branch)
+name: Build and archive site
 
 on:
   push:
@@ -11,7 +11,7 @@ permissions:
   id-token: write
 
 jobs:
-  build-and-deploy:
+  build-and-archive:
     runs-on: ubuntu-latest
 
     steps:
@@ -29,4 +29,23 @@ jobs:
           ls -al
           npm install
           ls -al
-          
+
+      - name: Build site
+        run: npm run build
+
+      - name: Archive site (zip)
+        run: |
+          echo "creating site-dist.zip..."
+          if [ -d "./dist" ]; then
+            zip -r site-dist.zip dist
+            ls -lh site-dist.zip
+          else
+            echo "Error: dist folder not found"
+            exit 1
+          fi
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: site-dist
+          path: site-dist.zip
