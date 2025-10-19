@@ -27,3 +27,6 @@ jobs:
         run: |
           npm -v
           ls -al
+          npm install
+          ls -al
+          
