@@ -1,105 +1,105 @@
-import { useState } from "react";
-import { motion } from "framer-motion";
-import { Card } from "@/components/ui/card";
+import { useRef } from "react";
+import { motion, useInView } from "framer-motion";
+import { Search, PenTool, Cog, BookOpen } from "lucide-react";
 
 const steps = [
   {
-    id: 1,
     title: "Discover",
-    desc: "We start with a structured questionnaire and a discovery call to confirm scope, risks, and timelines.",
-    icon: "🔍",
+    desc: "We start with a structured questionnaire and discovery call to confirm scope, risks, and timelines.",
+    icon: <Search className="h-8 w-8 text-cyan-300" />,
   },
   {
-    id: 2,
     title: "Design",
-    desc: "We create your SOW with milestones, dependencies, and acceptance criteria aligned with best practices.",
-    icon: "🧩",
+    desc: "We create your Statement of Work with milestones, dependencies, and acceptance criteria.",
+    icon: <PenTool className="h-8 w-8 text-violet-300" />,
   },
   {
-    id: 3,
     title: "Deliver",
-    desc: "Engineers execute the plan using automation-first deployment with validation checklists and audit logs.",
-    icon: "⚙️",
+    desc: "Our engineers execute the plan using automation-first deployment with validation and documentation.",
+    icon: <Cog className="h-8 w-8 text-emerald-300" />,
   },
   {
-    id: 4,
     title: "Document",
-    desc: "You receive partner-ready handover docs — configs, runbooks, evidence, and change logs.",
-    icon: "📘",
+    desc: "We hand over configurations, evidence, and detailed runbooks to your operations team.",
+    icon: <BookOpen className="h-8 w-8 text-fuchsia-300" />,
   },
 ];
 
 export default function ProcessSection() {
-  const [active, setActive] = useState(1);
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: "-100px" });
 
   return (
-    <section id="process" className="relative text-center">
-      <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight mb-6">
+    <section
+      id="process"
+      className="relative py-32 flex flex-col items-center text-center overflow-hidden"
+    >
+      <h2 className="text-4xl md:text-5xl font-extrabold tracking-tight">
         <span className="bg-gradient-to-r from-cyan-300 via-violet-400 to-cyan-300 bg-clip-text text-transparent">
           How We Work
         </span>
       </h2>
-
-      <p className="text-slate-300 mb-12 max-w-2xl mx-auto">
-        A four-step, automation-first approach that keeps every project traceable, predictable, and validated.
+      <p className="text-slate-300 mt-4 max-w-2xl text-base md:text-lg">
+        Our delivery process is transparent, auditable, and designed to remove
+        surprises — from scope to handover.
       </p>
 
-      <div className="relative flex flex-col md:flex-row items-center justify-center gap-8 md:gap-12">
-        {steps.map((step) => (
-          <motion.div
-            key={step.id}
-            onHoverStart={() => setActive(step.id)}
-            className="flex flex-col items-center relative"
-          >
-            {/* Connector lines */}
-            {step.id !== steps.length && (
-              <div
-                className="hidden md:block absolute top-6 left-full w-24 h-[2px] bg-gradient-to-r from-cyan-400/40 to-violet-400/40"
-                aria-hidden
-              ></div>
-            )}
+      <div
+        ref={ref}
+        className="relative mt-24 flex flex-col md:flex-row items-center justify-center gap-16 md:gap-24"
+      >
+        {/* Horizontal glowing timeline */}
+        <motion.div
+          initial={{ width: 0 }}
+          animate={isInView ? { width: "100%" } : { width: 0 }}
+          transition={{ duration: 2, ease: "easeInOut" }}
+          className="absolute top-1/2 hidden md:block h-[2px] bg-gradient-to-r from-cyan-400 via-violet-400 to-fuchsia-400 opacity-50"
+        />
 
-            {/* Step orb */}
+        {steps.map((step, i) => (
+          <motion.div
+            key={step.title}
+            initial={{ opacity: 0, y: 60 }}
+            animate={isInView ? { opacity: 1, y: 0 } : {}}
+            transition={{
+              delay: i * 0.3,
+              duration: 0.6,
+              ease: "easeOut",
+            }}
+            className="relative flex flex-col items-center text-center max-w-xs"
+          >
             <motion.div
-              animate={{
-                scale: active === step.id ? 1.15 : 1,
-                boxShadow:
-                  active === step.id
-                    ? "0 0 30px rgba(168,85,247,0.4)"
-                    : "0 0 10px rgba(94,234,212,0.2)",
-              }}
-              transition={{ type: "spring", stiffness: 200, damping: 15 }}
-              className="h-16 w-16 md:h-20 md:w-20 flex items-center justify-center rounded-full bg-gradient-to-br from-cyan-500/30 to-violet-500/30 border border-white/10 text-3xl select-none"
+              whileHover={{ scale: 1.15 }}
+              transition={{ type: "spring", stiffness: 250, damping: 10 }}
+              className="h-20 w-20 flex items-center justify-center rounded-full bg-gradient-to-br from-slate-800/60 to-slate-900/60 border border-white/10 shadow-xl backdrop-blur"
             >
               {step.icon}
             </motion.div>
-
-            {/* Title */}
-            <div className="mt-4 text-lg font-semibold text-white">{step.title}</div>
-
-            {/* Description (active) */}
-            {active === step.id && (
+            <h3 className="mt-5 text-xl font-bold text-white">
+              {step.title}
+            </h3>
+            <p className="mt-2 text-slate-300 text-sm leading-relaxed">
+              {step.desc}
+            </p>
+            {i < steps.length - 1 && (
               <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.25 }}
-                className="mt-3 text-sm text-slate-300 max-w-[240px]"
-              >
-                {step.desc}
-              </motion.div>
+                initial={{ height: 0 }}
+                animate={isInView ? { height: "4rem" } : { height: 0 }}
+                transition={{ delay: i * 0.3 + 0.2, duration: 0.5 }}
+                className="md:hidden w-[2px] bg-gradient-to-b from-cyan-400/30 to-violet-400/30 mt-4"
+              />
             )}
           </motion.div>
         ))}
       </div>
 
-      {/* CTA buttons */}
-      <div className="mt-12 flex flex-wrap justify-center gap-3">
+      {/* CTA */}
+      <div className="mt-20 flex flex-wrap justify-center gap-3">
         <button
           onClick={() =>
             document.getElementById("projects")?.scrollIntoView({ behavior: "smooth" })
           }
-          className="px-6 py-2 bg-cyan-500 hover:bg-cyan-400 text-slate-900 rounded-full font-semibold transition"
+          className="px-6 py-3 bg-cyan-500 hover:bg-cyan-400 text-slate-900 rounded-full font-semibold transition"
         >
           See Projects
         </button>
@@ -107,7 +107,7 @@ export default function ProcessSection() {
           onClick={() =>
             document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" })
           }
-          className="px-6 py-2 bg-violet-500 hover:bg-violet-400 text-slate-900 rounded-full font-semibold transition"
+          className="px-6 py-3 bg-violet-500 hover:bg-violet-400 text-slate-900 rounded-full font-semibold transition"
         >
           Book a Scoping Call
         </button>
