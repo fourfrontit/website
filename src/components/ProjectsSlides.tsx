@@ -1,4 +1,4 @@
-import { useRef, useLayoutEffect, useEffect } from "react";
+import { useRef, useEffect } from "react";
 import { Card, CardHeader, CardContent, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
@@ -10,51 +10,45 @@ export default function ProjectsSlides({
   onRequestSOW: (projectKey: string) => void;
 }) {
   const scroller = useRef<HTMLDivElement | null>(null);
-  const timer = useRef<ReturnType<typeof setInterval> | null>(null);
+  const direction = useRef<"forward" | "backward">("forward");
 
-  const startAuto = () => {
-    const el = scroller.current;
-    if (!el || timer.current) return;
-    if (el.scrollWidth <= el.clientWidth + 10) return; // only if scrollable
-    timer.current = setInterval(() => {
-      const max = el.scrollWidth - el.clientWidth;
-      const next = el.scrollLeft + 360;
-      if (next >= max - 5) {
-        el.scrollTo({ left: 0, behavior: "smooth" });
-      } else {
-        el.scrollBy({ left: 360, behavior: "smooth" });
-      }
-    }, 4000);
-  };
-
-  const stopAuto = () => {
-    if (timer.current) {
-      clearInterval(timer.current);
-      timer.current = null;
-    }
-  };
-
-  useLayoutEffect(() => {
-    // wait until layout is ready
+  useEffect(() => {
     const el = scroller.current;
     if (!el) return;
 
-    const observer = new ResizeObserver(() => {
-      stopAuto();
-      startAuto();
-    });
-    observer.observe(el);
+    let lastTime = 0;
+    let scrollSpeed = 0.6; // pixels per frame (60fps ≈ 36px/sec)
+    let frameId: number;
 
-    const init = setTimeout(startAuto, 1000);
+    const animate = (time: number) => {
+      if (!el) return;
+      const maxScroll = el.scrollWidth - el.clientWidth;
+      if (time - lastTime > 16) {
+        if (direction.current === "forward") {
+          el.scrollLeft += scrollSpeed;
+          if (el.scrollLeft >= maxScroll - 2) direction.current = "backward";
+        } else {
+          el.scrollLeft -= scrollSpeed;
+          if (el.scrollLeft <= 0) direction.current = "forward";
+        }
+        lastTime = time;
+      }
+      frameId = requestAnimationFrame(animate);
+    };
 
-    const handleVis = () => (document.hidden ? stopAuto() : startAuto());
-    document.addEventListener("visibilitychange", handleVis);
+    frameId = requestAnimationFrame(animate);
+
+    // pause on hover
+    const stop = () => cancelAnimationFrame(frameId);
+    const start = () => (frameId = requestAnimationFrame(animate));
+
+    el.addEventListener("mouseenter", stop);
+    el.addEventListener("mouseleave", start);
 
     return () => {
-      clearTimeout(init);
-      stopAuto();
-      document.removeEventListener("visibilitychange", handleVis);
-      observer.disconnect();
+      cancelAnimationFrame(frameId);
+      el.removeEventListener("mouseenter", stop);
+      el.removeEventListener("mouseleave", start);
     };
   }, []);
 
@@ -80,7 +74,7 @@ export default function ProjectsSlides({
         Select a project to view scope and start your questionnaire.
       </p>
 
-      {/* navigation arrows */}
+      {/* arrows */}
       <button
         aria-label="Previous"
         className="hidden md:flex text-slate-200 hover:text-white absolute -left-16 top-1/2 -translate-y-1/2 z-10 h-12 w-12 items-center justify-center rounded-full bg-white/10 border border-white/10 shadow-xl hover:bg-white/15"
@@ -99,11 +93,9 @@ export default function ProjectsSlides({
 
       <div
         ref={scroller}
-        onMouseEnter={stopAuto}
-        onMouseLeave={startAuto}
         className="mt-8 overflow-x-auto [scroll-snap-type:x_mandatory] hide-scrollbar"
       >
-        <div className="flex gap-6 min-w-max">
+        <div className="flex gap-6 min-w-[120%]">
           {projects.map((p) => (
             <Card
               key={p.key}
@@ -132,7 +124,7 @@ export default function ProjectsSlides({
                   {p.blurb}
                 </p>
                 <ul className="mt-3 space-y-1 text-sm text-slate-200">
-                  {p.details.slice(0, 4).map((d) => (
+                  {p.details.map((d) => (
                     <li key={d} className="flex items-start gap-2">
                       <span className="mt-1 inline-block h-2 w-2 rounded-full bg-emerald-400" />{" "}
                       {d}
