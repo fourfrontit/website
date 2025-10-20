@@ -9,5 +9,5 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
-  base: "/website/",
+  base: '/', // use '/' for custom domain like dev.fourfrontit.com
 });
