@@ -1,26 +1,30 @@
 {
-  "name": "fourfrontit-landing",
-  "version": "1.0.0",
+  "name": "fourfront-it-website",
   "private": true,
+  "version": "1.0.0",
+  "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d dist"
   },
   "dependencies": {
-    "framer-motion": "^10.12.6",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "lucide-react": "^0.378.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
   },
   "devDependencies": {
-    "autoprefixer": "^10.4.14",
-    "postcss": "^8.4.24",
-    "tailwindcss": "^3.4.17",
-    "vite": "^5.0.0"
-  }
-}
-{
-  "dependencies": {
-    "lucide-react": "^0.370.0"   // <- replace ^0.0.0 with a real version or run `npm i lucide-react` afterwards
-  }
+    "@types/react": "^18.3.2",
+    "@types/react-dom": "^18.3.0",
+    "@vitejs/plugin-react": "^4.3.2",
+    "autoprefixer": "^10.4.19",
+    "gh-pages": "^6.1.0",
+    "postcss": "^8.4.39",
+    "tailwindcss": "^3.4.13",
+    "typescript": "^5.6.3",
+    "vite": "^5.4.10"
+  },
+  "homepage": "https://YOURUSERNAME.github.io/fourfront-it-website"
 }
