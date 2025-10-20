@@ -2,7 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
-/* small defaults so dark class works */
-:root { --bg: #fff; }
-html.dark { --bg: #0b0f12; }
-body { background: var(--bg); }
+/* small body background tweak to match your shell */
+body {
+  background: #0b1220;
+  color: #e6eef6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
