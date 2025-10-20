@@ -27,6 +27,7 @@ jobs:
           npm -v
           npm install
           npm install react-router-dom
+          npm install lucide-react
           npm ls react-router-dom
           npm run build
 
