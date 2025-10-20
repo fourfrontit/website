@@ -1,4 +1,3 @@
-h1, .h1 { @apply text-5xl md:text-6xl font-extrabold font-display tracking-tight; }
-h2, .h2 { @apply text-4xl md:text-5xl font-extrabold font-display tracking-tight; }
-h3, .h3 { @apply text-2xl md:text-3xl font-bold font-display; }
-p, .body { @apply text-base md:text-lg text-slate-300 leading-relaxed; }
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
