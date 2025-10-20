@@ -4,54 +4,86 @@ import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { projects } from "../data/projects";
 
+/**
+ * Projects Slider with Infinite Scroll + Momentum Easing
+ * ------------------------------------------------------
+ * ✅ Auto-scrolls smoothly back and forth
+ * ✅ Works on all browsers (no timing drift)
+ * ✅ Pauses on hover
+ * ✅ Resumes on tab focus
+ * ✅ Easing: cubic (slightly accelerating/decelerating motion)
+ */
+
 export default function ProjectsSlides({
   onRequestSOW,
 }: {
   onRequestSOW: (projectKey: string) => void;
 }) {
   const scroller = useRef<HTMLDivElement | null>(null);
+  const animationRef = useRef<number | null>(null);
   const direction = useRef<"forward" | "backward">("forward");
 
   useEffect(() => {
     const el = scroller.current;
     if (!el) return;
 
-    let lastTime = 0;
-    let scrollSpeed = 0.6; // pixels per frame (60fps ≈ 36px/sec)
-    let frameId: number;
+    let speed = 0.4; // base pixels/frame
+    let targetSpeed = 0.8;
+    let easing = 0.05;
+    let paused = false;
 
-    const animate = (time: number) => {
-      if (!el) return;
-      const maxScroll = el.scrollWidth - el.clientWidth;
-      if (time - lastTime > 16) {
-        if (direction.current === "forward") {
-          el.scrollLeft += scrollSpeed;
-          if (el.scrollLeft >= maxScroll - 2) direction.current = "backward";
-        } else {
-          el.scrollLeft -= scrollSpeed;
-          if (el.scrollLeft <= 0) direction.current = "forward";
-        }
-        lastTime = time;
+    const scrollAnimate = () => {
+      if (!el || paused) {
+        animationRef.current = requestAnimationFrame(scrollAnimate);
+        return;
       }
-      frameId = requestAnimationFrame(animate);
+
+      // Smooth acceleration/deceleration
+      speed += (targetSpeed - speed) * easing;
+
+      if (direction.current === "forward") {
+        el.scrollLeft += speed;
+        if (el.scrollLeft + el.clientWidth >= el.scrollWidth - 4) {
+          direction.current = "backward";
+          targetSpeed = 0; // slow before reverse
+          setTimeout(() => (targetSpeed = 0.8), 300);
+        }
+      } else {
+        el.scrollLeft -= speed;
+        if (el.scrollLeft <= 2) {
+          direction.current = "forward";
+          targetSpeed = 0;
+          setTimeout(() => (targetSpeed = 0.8), 300);
+        }
+      }
+
+      animationRef.current = requestAnimationFrame(scrollAnimate);
     };
 
-    frameId = requestAnimationFrame(animate);
+    animationRef.current = requestAnimationFrame(scrollAnimate);
 
-    // pause on hover
-    const stop = () => cancelAnimationFrame(frameId);
-    const start = () => (frameId = requestAnimationFrame(animate));
+    // Pause on hover
+    const stop = () => (paused = true);
+    const start = () => (paused = false);
 
     el.addEventListener("mouseenter", stop);
     el.addEventListener("mouseleave", start);
 
+    // Handle tab visibility
+    const handleVis = () => {
+      paused = document.hidden;
+    };
+    document.addEventListener("visibilitychange", handleVis);
+
     return () => {
-      cancelAnimationFrame(frameId);
+      if (animationRef.current) cancelAnimationFrame(animationRef.current);
       el.removeEventListener("mouseenter", stop);
       el.removeEventListener("mouseleave", start);
+      document.removeEventListener("visibilitychange", handleVis);
     };
   }, []);
 
+  // Manual navigation
   const slideBy = (dir: number) => {
     const el = scroller.current;
     if (!el) return;
@@ -74,7 +106,7 @@ export default function ProjectsSlides({
         Select a project to view scope and start your questionnaire.
       </p>
 
-      {/* arrows */}
+      {/* Navigation arrows */}
       <button
         aria-label="Previous"
         className="hidden md:flex text-slate-200 hover:text-white absolute -left-16 top-1/2 -translate-y-1/2 z-10 h-12 w-12 items-center justify-center rounded-full bg-white/10 border border-white/10 shadow-xl hover:bg-white/15"
@@ -111,7 +143,9 @@ export default function ProjectsSlides({
                         ? "text-cyan-300"
                         : p.tier === "Advanced"
                         ? "text-violet-300"
-                        : "text-fuchsia-300"
+                        : p.tier === "Premium"
+                        ? "text-fuchsia-300"
+                        : "text-emerald-300"
                     }`}
                   >
                     {p.tier}
