@@ -1,29 +1,19 @@
-import * as React from "react";
-import { cn } from "../../utils/cn";
+import { cn } from "@/lib/utils";
 
-export interface ButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: "default" | "outline";
+interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  variant?: "primary" | "secondary";
 }
 
-export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant = "default", ...props }, ref) => {
-    const base =
-      "inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none";
-    const variants = {
-      default:
-        "bg-cyan-500 hover:bg-cyan-400 text-slate-900 focus-visible:ring-cyan-400",
-      outline:
-        "border border-white/20 text-slate-200 hover:bg-white/10 focus-visible:ring-white/40",
-    };
+export function Button({ variant = "primary", className, ...props }: ButtonProps) {
+  const base =
+    "px-8 py-3 font-semibold rounded-full transition shadow-lg active:scale-[0.98]";
 
-    return (
-      <button
-        ref={ref}
-        className={cn(base, variants[variant], className)}
-        {...props}
-      />
-    );
-  }
-);
-Button.displayName = "Button";
+  const variants = {
+    primary: "bg-cyan-500 hover:bg-cyan-400 text-slate-900",
+    secondary: "bg-violet-500 hover:bg-violet-400 text-slate-900",
+  };
+
+  return (
+    <button className={cn(base, variants[variant], className)} {...props} />
+  );
+}
