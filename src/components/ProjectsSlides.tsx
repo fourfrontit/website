@@ -144,3 +144,12 @@ export default function ProjectsSlides({
                   >
                     Request SOW
                   </Button>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
