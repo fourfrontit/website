@@ -132,12 +132,15 @@ export default function ProjectsSlides({
                   </span>
                   <Button
                     className={`text-white px-3 py-1 rounded-full ${
-                      p.tier === "Standard"
-                        ? "bg-cyan-500 hover:bg-cyan-400"
-                        : p.tier === "Advanced"
-                        ? "bg-violet-500 hover:bg-violet-400"
-                        : p.tier === "Premium"
-                        ? "bg-fuchsia-500 hover:bg-fuchsia-400"
-                        : "bg-emerald-500 hover:bg-emerald-400"
+                    p.tier === "Standard"
+                      ? "bg-cyan-500 hover:bg-cyan-400"
+                      : p.tier === "Advanced"
+                      ? "bg-violet-500 hover:bg-violet-400"
+                      : p.tier === "Premium"
+                      ? "bg-fuchsia-500 hover:bg-fuchsia-400"
+                      : "bg-emerald-500 hover:bg-emerald-400"
                     }`}
                     onClick={() => onRequestSOW(p.key)}
+                  >
+                    Request SOW
+                  </Button>
