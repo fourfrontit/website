@@ -95,7 +95,7 @@ export default function ProjectsSlides({
         ref={scroller}
         className="mt-8 overflow-x-auto [scroll-snap-type:x_mandatory] hide-scrollbar"
       >
-        <div className="flex gap-6 min-w-[120%]">
+        <div className="flex gap-6 min-w-max">
           {projects.map((p) => (
             <Card
               key={p.key}
