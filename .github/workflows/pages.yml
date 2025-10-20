@@ -28,13 +28,17 @@ jobs:
           node-version: 20
           cache: "npm"
 
-      - name: 📦 Generate lock file (if missing) and install
+      - name: 📦 Install dependencies (auto-fix missing lock file)
         run: |
-          if [ ! -f package-lock.json ]; then
-            echo "No lock file found — generating..."
+          if [ -f package-lock.json ]; then
+            echo "✅ Lock file found — using npm ci for clean install"
+            npm ci
+          else
+            echo "⚠️ No lock file found — running npm install instead"
+            npm install
+            echo "🪄 Generating package-lock.json for future builds..."
             npm install --package-lock-only
           fi
-          npm install
 
       - name: 🏗️ Build project with Vite
         run: |
