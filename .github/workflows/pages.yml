@@ -28,6 +28,7 @@ jobs:
           npm install
           npm install react-router-dom
           npm i -D @vitejs/plugin-react
+          npm install -D typescript @types/react @types/react-dom @vitejs/plugin-react
           npm install lucide-react
           npm ls react-router-dom
           npm run build
