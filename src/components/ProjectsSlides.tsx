@@ -1,4 +1,4 @@
-import { useRef, useEffect } from "react";
+import { useRef, useLayoutEffect, useEffect } from "react";
 import { Card, CardHeader, CardContent, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
@@ -12,10 +12,10 @@ export default function ProjectsSlides({
   const scroller = useRef<HTMLDivElement | null>(null);
   const timer = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  // ---- autoplay helpers ----
   const startAuto = () => {
     const el = scroller.current;
     if (!el || timer.current) return;
+    if (el.scrollWidth <= el.clientWidth + 10) return; // only if scrollable
     timer.current = setInterval(() => {
       const max = el.scrollWidth - el.clientWidth;
       const next = el.scrollLeft + 360;
@@ -34,11 +34,19 @@ export default function ProjectsSlides({
     }
   };
 
-  useEffect(() => {
-    // wait a tick so layout is ready
-    const init = setTimeout(startAuto, 700);
+  useLayoutEffect(() => {
+    // wait until layout is ready
+    const el = scroller.current;
+    if (!el) return;
 
-    // handle tab visibility
+    const observer = new ResizeObserver(() => {
+      stopAuto();
+      startAuto();
+    });
+    observer.observe(el);
+
+    const init = setTimeout(startAuto, 1000);
+
     const handleVis = () => (document.hidden ? stopAuto() : startAuto());
     document.addEventListener("visibilitychange", handleVis);
 
@@ -46,10 +54,10 @@ export default function ProjectsSlides({
       clearTimeout(init);
       stopAuto();
       document.removeEventListener("visibilitychange", handleVis);
+      observer.disconnect();
     };
   }, []);
 
-  // manual arrows
   const slideBy = (dir: number) => {
     const el = scroller.current;
     if (!el) return;
@@ -72,7 +80,7 @@ export default function ProjectsSlides({
         Select a project to view scope and start your questionnaire.
       </p>
 
-      {/* nav arrows */}
+      {/* navigation arrows */}
       <button
         aria-label="Previous"
         className="hidden md:flex text-slate-200 hover:text-white absolute -left-16 top-1/2 -translate-y-1/2 z-10 h-12 w-12 items-center justify-center rounded-full bg-white/10 border border-white/10 shadow-xl hover:bg-white/15"
