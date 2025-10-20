@@ -2,7 +2,7 @@ import { useRef, useEffect } from "react";
 import { Card, CardHeader, CardContent, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { projects } from "../data"; // adjust path if needed
+import { projects } from "../data/projects";
 
 export default function ProjectsSlides({ onRequestSOW }: { onRequestSOW: (projectKey: string) => void }) {
   const scroller = useRef<HTMLDivElement | null>(null);
